@@ -1,5 +1,6 @@
 # Hello Hapi
 
+https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-with-concourse-ci-on-ubuntu-16-04
 An example [Hapi.js](https://hapijs.com/) app with https://github.com/hapijs/lab tests. Solution to Exercise 1 from [Exercises for Programmers](http://pragprog.com/titles/bhwb), copyright 2015 The Pragmatic Programmers.
 
 ## Usage

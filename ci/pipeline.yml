@@ -1,4 +1,5 @@
 ---
+# Define npm-cache-resource Docker image resource type 
 resource_types:
   - name: npm-cache
     type: docker-image
@@ -6,11 +7,12 @@ resource_types:
       repository: ymedlop/npm-cache-resource
       tag: latest
 
+# Define the actual resources for the pipeline so these objects can be used for the jobs
 resources:
   - name: hello_hapi
     type: git
     source: &repo-source
-      uri: https://github.com/your_github_user/hello_hapi
+      uri: https://github.com/etenbrinke/hello_hapi
       branch: master
   - name: dependency-cache
     type: npm-cache

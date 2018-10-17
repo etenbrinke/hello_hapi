@@ -8,31 +8,36 @@ resource_types:
       tag: latest
 
 # Define the actual resources for the pipeline so these objects can be used for the jobs
+# Concourse checks each resource for new versions once per minute
 resources:
-  - name: hello_hapi
+  - name: hello_hapi # Resource represents the hello_hapi repository on GitHub
     type: git
-    source: &repo-source
+    source: &repo-source # YAML anchor called "repo-source" which labels the element
       uri: https://github.com/etenbrinke/hello_hapi
       branch: master
-  - name: dependency-cache
+  - name: dependency-cache # Use "npm-cache" resource type to download the project's dependencies
     type: npm-cache
     source:
-      <<: *repo-source
+      <<: *repo-source # Use repo-source label
       paths:
-        - package.json
+        - package.json # project dependencies
 
+# "trigger" option is set so a new build will be kicked off automatically when a new version is available
 jobs:
   - name: Install dependencies
     plan:
-      - get: hello_hapi
-        trigger: true
+      - get: hello_hapi # resource dependencies of the task
+        trigger: true # automatically fetch the repository and begin a new build of this job every time a new commit is detected in the hello_hapi repository.
+        # This get statement requires the resource we defined that downloads and caches the project's Node.js dependencies.
+        # This statement evaluates the requirements found in the package.json file and downloads them.
+        # With no tasks defined for this job, no other actions are taken, but the downloaded dependencies will be available to subsequent jobs.
       - get: dependency-cache
   - name: Run tests
     plan:
-      - get: hello_hapi
+      - get: hello_hapi # resource dependencies of the task
         trigger: true
+        passed: [Install dependencies] # This "passed" constraint causes the get statements to only match resources that have successfully traversed previous steps in the pipeline
+      - get: dependency-cache # resource dependencies of the task
         passed: [Install dependencies]
-      - get: dependency-cache
-        passed: [Install dependencies]
-      - task: run the test suite
-        file: hello_hapi/ci/tasks/run_tests.yml
+      - task: run the test suite # specify how to execute an action 
+        file: hello_hapi/ci/tasks/run_tests.yml # pull the definition from a file instead of defining the steps to complete inline 

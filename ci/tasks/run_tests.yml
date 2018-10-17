@@ -13,3 +13,6 @@ inputs:
 
 run:
   path: hello_hapi/ci/scripts/run_tests.sh
+
+# In the above configuration, we specify that this task requires a Linux worker. 
+# The Concourse server itself can satisfy this requirement with no additional configuration.
